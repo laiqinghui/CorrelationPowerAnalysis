@@ -3,7 +3,13 @@ import pandas as pd
 from CPA import CPA
 
 
-import sys, getopt
+# 39323737343831323938323835393337
+# 39323737343831323938323835393337
+# 39323737343831323938323835393337
+# 39323737343831323938323835393337
+# 39323737343831323938323835393337
+# 39323737343831323938323835393337
+# 39323737343831323938323835393337
 
 def main(argv):
 
@@ -11,15 +17,24 @@ def main(argv):
    print("Processing ", inputfilename, "...")
    pt, ct, tracesPoints = processCSV(inputfilename, startpt, endpt)
    keysize = 16
+   # Init CPA object
    cpa = CPA(keysize)
+   # Set data points
    cpa.setTracesPointsAndPT(tracesPoints, pt)
-   cpa.Analyse()
+   # Do CPA
+   print("Doing Correlational Power Aalysis...")
+   key = cpa.Analyse()
+   print("Key(Hex): ", key)
+   print("Key(Text): ", bytearray.fromhex(str(key)).decode())
+
 
 
 
 
 
 def getInputs(argv):
+
+
     if len(argv) < 3 and not("-h" in argv) :
         print("Wrong command format!")
         print("Please supply csv file and options. Use -h option for example command.")
@@ -57,6 +72,7 @@ def processCSV(filename, startpt, endpt):
     pt = dframe.iloc[:, 0:1]
     ct = dframe.iloc[:, 1:2]
     dataTraces = dframe.iloc[:, startpt+1:endpt]
+    print("Processed data: ")
     print(dataTraces.head())
 
     return pt.values, ct.values, dataTraces.values
