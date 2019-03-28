@@ -3,39 +3,24 @@ import pandas as pd
 from CPA import CPA
 
 
-# 39323737343831323938323835393337
-# 39323737343831323938323835393337
-# 39323737343831323938323835393337
-# 39323737343831323938323835393337
-# 39323737343831323938323835393337
-# 39323737343831323938323835393337
-# 39323737343831323938323835393337
-
 def main(argv):
-
-   inputfilename, startpt, endpt = getInputs(argv)
-   print("Processing ", inputfilename, "...")
-   pt, ct, tracesPoints = processCSV(inputfilename, startpt, endpt)
-   keysize = 16
-   # Init CPA object
-   cpa = CPA(keysize)
-   # Set data points
-   cpa.setTracesPointsAndPT(tracesPoints, pt)
-   # Do CPA
-   print("Doing Correlational Power Aalysis...")
-   key = cpa.Analyse()
-   print("Key(Hex): ", key)
-   print("Key(Text): ", bytearray.fromhex(str(key)).decode())
-
-
-
-
+    inputfilename, startpt, endpt = getInputs(argv)
+    print("Processing ", inputfilename, "...")
+    pt, ct, tracesPoints = processCSV(inputfilename, startpt, endpt)
+    keysize = 16
+    # Init CPA object
+    cpa = CPA(keysize)
+    # Set data points
+    cpa.setTracesPointsAndPT(tracesPoints, pt)
+    # Do CPA
+    print("Doing Correlational Power Aalysis...")
+    key = cpa.Analyse()
+    print("Key(Hex): ", key)
+    print("Key(Text): ", bytearray.fromhex(str(key)).decode())
 
 
 def getInputs(argv):
-
-
-    if len(argv) < 3 and not("-h" in argv) :
+    if len(argv) < 3 and not ("-h" in argv):
         print("Wrong command format!")
         print("Please supply csv file and options. Use -h option for example command.")
         sys.exit(2)
@@ -59,11 +44,11 @@ def getInputs(argv):
 
     return inputfilename, int(startpt), int(endpt)
 
-def processCSV(filename, startpt, endpt):
 
-    #index start at 0 conversion
-    startpt-=1
-    endpt-=1
+def processCSV(filename, startpt, endpt):
+    # index start at 0 conversion
+    startpt -= 1
+    endpt -= 1
 
     dframe = pd.read_csv(filename)
     dframe = dframe.dropna(axis=1, how='any')  # Cleanup data: Removes anything that's not a number
@@ -71,11 +56,12 @@ def processCSV(filename, startpt, endpt):
     # dframe.drop(dframe.columns[[i for i in range(0, startpt + 1, 1)]], axis=1, inplace= True)
     pt = dframe.iloc[:, 0:1]
     ct = dframe.iloc[:, 1:2]
-    dataTraces = dframe.iloc[:, startpt+1:endpt]
+    dataTraces = dframe.iloc[:, startpt + 1:endpt]
     print("Processed data: ")
     print(dataTraces.head())
 
     return pt.values, ct.values, dataTraces.values
 
+
 if __name__ == "__main__":
-   main(sys.argv[1:])
+    main(sys.argv[1:])

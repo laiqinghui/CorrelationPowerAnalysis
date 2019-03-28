@@ -10,15 +10,13 @@ class CPA():
     key = None
     toolbox = ToolBox()
 
-    def __init__(self, keySize = 16):
+    def __init__(self, keySize=16):
         self.key = np.zeros(keySize)
-
 
     def setTracesPointsAndPT(self, tracesPoints, plainTexts):
 
         self.tracesPoints = tracesPoints
         self.plainTexts = plainTexts
-
 
     def Analyse(self):
 
@@ -28,7 +26,7 @@ class CPA():
 
             self.InitHypothesis(i)
 
-            corrMatrix =  self.Correlate(self.hypothesis, self.tracesPoints)
+            corrMatrix = self.Correlate(self.hypothesis, self.tracesPoints)
 
             matrixR = np.zeros(256)
             # Get max correlation value from among the traces data points
@@ -41,7 +39,6 @@ class CPA():
             key += format(index, '02X')
 
         return key
-
 
     def Correlate(self, A, B):
 
@@ -58,32 +55,17 @@ class CPA():
         ssB = (B_mB ** 2).sum(1)
 
         # Finally get corr coeff
-        # print("A_mA shape: ", A_mA.shape, "B_mB shape: ", B_mB.shape)
-        # print("np.dot(A_mA, B_mB.T) shape: ", np.dot(A_mA, B_mB.T).shape, "np.sqrt(np.dot(ssA[:, None], ssB[None])) shape", np.sqrt(np.dot(ssA[:, None], ssB[None])).shape)
-        # A_mA shape:  (256, 150) B_mB.T shape:  (150, 1719)
         return np.dot(A_mA, B_mB.T) / np.sqrt(np.dot(ssA[:, None], ssB[None]))
 
-
-
     def InitHypothesis(self, byteNumber):
-
 
         keyHyp = [i for i in range(256)]
         self.hypothesis = np.zeros((len(self.plainTexts), len(keyHyp)))
 
         for i in range(len(self.plainTexts)):
 
-
-            subPT = self.plainTexts[i][0][2*(byteNumber-1):2*byteNumber]
-            # print("current subpt: ", subPT)
+            subPT = self.plainTexts[i][0][2 * (byteNumber - 1):2 * byteNumber]
 
             for j in range(len(keyHyp)):
-
-                sboxResult = self.toolbox.Sbox(int(subPT, 16)^keyHyp[j])
+                sboxResult = self.toolbox.Sbox(int(subPT, 16) ^ keyHyp[j])
                 self.hypothesis[i][j] = self.toolbox.HammingWeight(sboxResult)
-
-
-
-
-
-
