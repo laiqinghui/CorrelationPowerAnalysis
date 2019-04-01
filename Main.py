@@ -15,6 +15,7 @@ def main(argv):
     # Do CPA
     print("Doing Correlational Power Aalysis...")
     key = cpa.Analyse()
+    cpa.VisualizeCorr(cpa.GetMatrixRelations()[0][0], cpa.GetMatrixRelations()[0][1])
     print("Key(Hex): ", key)
     print("Key(Text): ", bytearray.fromhex(str(key)).decode())
 
