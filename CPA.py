@@ -9,11 +9,24 @@ class CPA():
     plainTexts = None
     tracesPoints = None
     key = None
+    traceSetCount = None
+
+    # [ [0:length of 256],
+    #   [1:length of 256],
+    #
+    #
+    #
+    #   [20:length of 256],
+    # ]
+
+    CorrBytes = None
     matrixRelations = []
     toolbox = ToolBox()
 
-    def __init__(self, keySize=16):
+    def __init__(self, keySize=16, noOfTracesSet = 20):
         self.key = np.zeros(keySize)
+        self.traceSetCount = 0
+        self.CorrBytes = np.zeros(shape=(keySize, noOfTracesSet, 256))
 
     def setTracesPointsAndPT(self, tracesPoints, plainTexts):
 

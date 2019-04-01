@@ -8,16 +8,22 @@ def main(argv):
     print("Processing ", inputfilename, "...")
     pt, ct, tracesPoints = processCSV(inputfilename, startpt, endpt)
     keysize = 16
+    traceSets = range(10, 210, 10)
+
     # Init CPA object
-    cpa = CPA(keysize)
-    # Set data points
-    cpa.setTracesPointsAndPT(tracesPoints, pt)
-    # Do CPA
-    print("Doing Correlational Power Aalysis...")
-    key = cpa.Analyse()
-    cpa.VisualizeCorr(cpa.GetMatrixRelations()[0][0], cpa.GetMatrixRelations()[0][1])
-    print("Key(Hex): ", key)
-    print("Key(Text): ", bytearray.fromhex(str(key)).decode())
+    cpa = CPA(keysize, len(traceSets))
+
+    for tracesPointsLen in range(100, 110, 10):
+
+        # Set data points
+        cpa.setTracesPointsAndPT(tracesPoints[:tracesPointsLen], pt[:tracesPointsLen])
+        # Do CPA
+        print("Doing Correlational Power Aalysis...")
+        key = cpa.Analyse()
+        cpa.VisualizeCorr(cpa.GetMatrixRelations()[0][0], cpa.GetMatrixRelations()[0][1])
+
+        print("Key(Hex): ", key)
+        print("Key(Text): ", bytearray.fromhex(str(key)).decode())
 
 
 def getInputs(argv):
