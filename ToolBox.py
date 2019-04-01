@@ -29,8 +29,6 @@ class ToolBox():
 
     def HammingWeight(self, num, ret=0):
 
-        #0000
-
         count = 0
 
         while num >= 1:

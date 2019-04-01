@@ -46,7 +46,11 @@ class CPA():
         A = A.T
         B = B.T
 
+        # print("Shape of A: ", A.shape)
+        # print("Shape of B: ", B.shape)
+
         # Rowwise mean of input arrays & subtract from input arrays themeselves
+        # Mean normalization
         A_mA = A - A.mean(1)[:, None]
         B_mB = B - B.mean(1)[:, None]
 
@@ -63,6 +67,7 @@ class CPA():
         self.hypothesis = np.zeros((len(self.plainTexts), len(keyHyp)))
 
         for i in range(len(self.plainTexts)):
+
 
             subPT = self.plainTexts[i][0][2 * (byteNumber - 1):2 * byteNumber]
 
