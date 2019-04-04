@@ -5,39 +5,32 @@ from ToolBox import ToolBox
 
 class CPA():
 
-    hypothesis = None
-    plainTexts = None
-    tracesPoints = None
-    key = None
-    traceSetCount = None
 
-    # [ [0:length of 256],
-    #   [1:length of 256],
-    #
-    #
-    #
-    #   [20:length of 256],
-    # ]
-
-    CorrBytes = None
-    matrixRelations = []
     toolbox = ToolBox()
 
-    def __init__(self, keySize=16, noOfTracesSet = 20):
-        self.key = np.zeros(keySize)
+    def __init__(self, keySize=16):
         self.traceSetCount = 0
-        self.CorrBytes = np.zeros(shape=(keySize, noOfTracesSet, 256))
+        self.key = ""
+        self.keySize = keySize
+        self.hypothesis = None
+        self.plainTexts = None
+        self.tracesPoints = None
+        self.matrixRelation = None
+        self.matrixRelations = []
 
-    def setTracesPointsAndPT(self, tracesPoints, plainTexts):
+        # self.CorrBytes = np.zeros(shape=(keySize, noOfTracesSet, 256))
+
+    def SetTracesPointsAndPT(self, tracesPoints, plainTexts):
 
         self.tracesPoints = tracesPoints
         self.plainTexts = plainTexts
 
+    def GetKey(self):
+        return self.key
+
     def Analyse(self):
 
-        key = ""
-
-        for i in range(1, len(self.key) + 1, 1):
+        for i in range(1, self.keySize + 1, 1):
 
             self.InitHypothesis(i)
 
@@ -49,17 +42,23 @@ class CPA():
             matrixRelation = np.zeros(256)
             # Get max correlation value from among the traces data points
             for j in range(256):
-                matrixRelation[j] = max(abs(corrMatrix[j]))
+                # matrixRelation[j] = max(abs(corrMatrix[j]))
+                # Get max value in abs form but preserve the sign
+                matrixRelation[j] = corrMatrix[j][abs(corrMatrix[j]).argmax()]
 
             # Get index of highest correalation value out of the 256 permutations
-            index = np.argmax(matrixRelation)
+            # index = np.argmax(matrixRelation)
+            index = abs(matrixRelation).argmax()
 
             # Store subkey i guesses matrix and its correspoding highest score index for visualization purposes
-            self.matrixRelations.append((matrixRelation, index))
+            # self.matrixRelations.append((matrixRelation, index))
+            self.matrixRelation = matrixRelation
+            self.matrixRelations.append(matrixRelation)
 
-            key += format(index, '02X')
 
-        return key
+            self.key += format(index, '02X')
+
+        return self.key
 
     def Correlate(self, A, B):
 
@@ -100,12 +99,23 @@ class CPA():
 
         return self.matrixRelations
 
-    def VisualizeCorr(self, matrixRelation, index):
+    def VisualizeCorrSingle(self, matrixRelation, index):
 
         fig, axs = plt.subplots(1,1)
         axs.stem(matrixRelation)
         axs.grid()
         # axs.stem(index, matrixRelation[index])
         axs.stem([index], [matrixRelation[index]], linefmt ="C1-", markerfmt = "C1o")
+
+        plt.show()
+
+    def VisualizeCorrAll(self, matrixRelation, index):
+
+        currentByte = self.CorrBytes[0]
+        fig, axs = plt.subplots(1, 1)
+        axs.plot(matrixRelation)
+        axs.grid()
+
+
 
         plt.show()

@@ -1,29 +1,101 @@
-import sys, getopt
+import sys, getopt, math
+import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from CPA import CPA
 
 
 def main(argv):
+
     inputfilename, startpt, endpt = getInputs(argv)
     print("Processing ", inputfilename, "...")
     pt, ct, tracesPoints = processCSV(inputfilename, startpt, endpt)
+    VisualizeTracesDifferences(pt, ct, tracesPoints)
+    # keysize = 16
+    #
+    #
+    # # Init CPA object
+    # cpa = CPA(keysize, len(traceSets))
+    #
+    #
+    # for tracesPointsLen in range(100, 110, 10):
+    #
+    #     # Set data points
+    #     cpa.SetTracesPointsAndPT(tracesPoints[:tracesPointsLen], pt[:tracesPointsLen])
+    #     # Do CPA
+    #     print("Doing Correlational Power Aalysis...")
+    #     key = cpa.Analyse()
+    #     # cpa.VisualizeCorrSingle(cpa.GetMatrixRelations()[0][0], cpa.GetMatrixRelations()[0][1])
+    #
+    #     print("Key(Hex): ", key)
+    #     print("Key(Text): ", bytearray.fromhex(str(key)).decode())
+
+
+def VisualizeTracesDifferences(pt, ct, tracesPoints):
+
     keysize = 16
-    traceSets = range(10, 210, 10)
+    traceSets = range(10, 350, 10)
+    cpaObjs = []
+    # Will contain temp 16 sets of 20 (256 by 1) matrices for concat
+    matrixRelationMatList = np.empty(shape=(keysize, len(traceSets)), dtype=object)
+    # Will be size of 16
+    ylistContainer = []
 
-    # Init CPA object
-    cpa = CPA(keysize, len(traceSets))
 
-    for tracesPointsLen in range(100, 110, 10):
-
+    for index1, tracesPointsLen in enumerate(traceSets):
+        print("Working with ", tracesPointsLen, " traces now...")
+        cpa = CPA(keysize)
         # Set data points
-        cpa.setTracesPointsAndPT(tracesPoints[:tracesPointsLen], pt[:tracesPointsLen])
+        cpa.SetTracesPointsAndPT(tracesPoints[:tracesPointsLen], pt[:tracesPointsLen])
         # Do CPA
         print("Doing Correlational Power Aalysis...")
         key = cpa.Analyse()
-        cpa.VisualizeCorr(cpa.GetMatrixRelations()[0][0], cpa.GetMatrixRelations()[0][1])
+        print("Key recovered with ", tracesPointsLen, " traces is ", key)
+        # Size of 16
+        currentMatrixRelations = cpa.GetMatrixRelations()
+        # Populate matrix data for plotting later
+        for index2, eachByteRelation in enumerate(currentMatrixRelations):
+            # Tranpose from 1 x 256 to 256 x1
+            matrixRelationMatList[index2][index1] = (np.array(eachByteRelation).reshape(len(eachByteRelation), 1))
 
-        print("Key(Hex): ", key)
-        print("Key(Text): ", bytearray.fromhex(str(key)).decode())
+
+        cpaObjs.append(cpa)
+
+    print("matrixRelationMatList.shape", matrixRelationMatList.shape)
+
+    for m in matrixRelationMatList:
+        # ylist will have a shape of (256 by 20)
+        ylist = np.concatenate(m, axis=1)
+        ylistContainer.append(ylist)
+
+
+    # Plotting
+    numOfRowsPerFig = 4
+    numOfColPerFig = 4
+    numOfPlotsPerFig = numOfRowsPerFig * numOfColPerFig
+    numOfFigReq = math.ceil(keysize / numOfPlotsPerFig)
+    figures = np.empty(shape=numOfFigReq, dtype=object)
+    figIndex = 0
+    plotIndex = 1
+    figures[figIndex] = plt.figure()
+    figures[figIndex].subplots_adjust(hspace=0.4, wspace=0.4)
+
+    for index, ylist in enumerate(ylistContainer):
+        if index > numOfPlotsPerFig:
+            figIndex += 1
+            figures[figIndex] = plt.figure()
+            figures[figIndex].subplots_adjust(hspace=0.4, wspace=0.4)
+            plotIndex = 1
+        ax = figures[figIndex].add_subplot(numOfRowsPerFig, numOfColPerFig, plotIndex)
+        for y in ylist:
+            ax.plot(traceSets, y)
+        ax.set_title(str(index))
+        plotIndex += 1
+
+
+    plt.show()
+
+
 
 
 def getInputs(argv):
