@@ -50,7 +50,7 @@ def VisualizeTracesDifferences(pt, ct, tracesPoints):
         # Do CPA
         print("Doing Correlational Power Aalysis...")
         key = cpa.Analyse()
-        print("Key recovered with ", tracesPointsLen, " traces is ", key)
+        print("Key recovered with ", tracesPointsLen, " traces is ", [hex(k)+"|"+chr(k) for k in key])
         # Size of 16
         currentMatrixRelations = cpa.GetMatrixRelations()
         # Populate matrix data for plotting later

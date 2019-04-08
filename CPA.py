@@ -8,7 +8,7 @@ class CPA():
 
     def __init__(self, keySize=16):
         self.traceSetCount = 0
-        self.key = ""
+        self.key = []
         self.keySize = keySize
         self.hypothesis = None
         self.plainTexts = None
@@ -51,7 +51,8 @@ class CPA():
             self.matrixRelation = matrixRelation
             self.matrixRelations.append(matrixRelation)
 
-            self.key += format(index, '02X')
+            # self.key += format(index, '02X')
+            self.key.append(index)
 
         return self.key
 
