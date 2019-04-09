@@ -4,13 +4,11 @@ from ToolBox import ToolBox
 
 
 class CPA():
-
-
     toolbox = ToolBox()
 
     def __init__(self, keySize=16):
         self.traceSetCount = 0
-        self.key = ""
+        self.key = []
         self.keySize = keySize
         self.hypothesis = None
         self.plainTexts = None
@@ -46,17 +44,15 @@ class CPA():
                 # Get max value in abs form but preserve the sign
                 matrixRelation[j] = corrMatrix[j][abs(corrMatrix[j]).argmax()]
 
-            # Get index of highest correalation value out of the 256 permutations
-            # index = np.argmax(matrixRelation)
+            # Get index of highest correlation value out of the 256 permutations
             index = abs(matrixRelation).argmax()
 
-            # Store subkey i guesses matrix and its correspoding highest score index for visualization purposes
-            # self.matrixRelations.append((matrixRelation, index))
+            # Store subkey i guesses matrix for visualization purposes
             self.matrixRelation = matrixRelation
             self.matrixRelations.append(matrixRelation)
 
-
-            self.key += format(index, '02X')
+            # self.key += format(index, '02X')
+            self.key.append(index)
 
         return self.key
 
@@ -69,7 +65,7 @@ class CPA():
         # print("Shape of A: ", A.shape)
         # print("Shape of B: ", B.shape)
 
-        # Rowwise mean of input arrays & subtract from input arrays themeselves
+        # Row-wise mean of input arrays & subtract from input arrays themselves
         # Mean normalization
         A_mA = A - A.mean(1)[:, None]
         B_mB = B - B.mean(1)[:, None]
@@ -83,16 +79,23 @@ class CPA():
 
     def InitHypothesis(self, byteNumber):
 
+        # Initialise data structure
         keyHyp = [i for i in range(256)]
         self.hypothesis = np.zeros((len(self.plainTexts), len(keyHyp)))
 
+        # Loop through all the traces
         for i in range(len(self.plainTexts)):
 
-
+            # Get the current plain text byte via array slicing
+            # Note that array is 3 dimensional due to conversion from Pandas frame
+            # to Numpy array
             subPT = self.plainTexts[i][0][2 * (byteNumber - 1):2 * byteNumber]
 
+            # Construct hypothetical data for each key-byte guesses
             for j in range(len(keyHyp)):
+                # Do sbox transformation according to look-up table
                 sboxResult = self.toolbox.Sbox(int(subPT, 16) ^ keyHyp[j])
+                # Estimate hypothetical power consumption value as hamming weights
                 self.hypothesis[i][j] = self.toolbox.HammingWeight(sboxResult)
 
     def GetMatrixRelations(self):
@@ -101,11 +104,11 @@ class CPA():
 
     def VisualizeCorrSingle(self, matrixRelation, index):
 
-        fig, axs = plt.subplots(1,1)
+        fig, axs = plt.subplots(1, 1)
         axs.stem(matrixRelation)
         axs.grid()
         # axs.stem(index, matrixRelation[index])
-        axs.stem([index], [matrixRelation[index]], linefmt ="C1-", markerfmt = "C1o")
+        axs.stem([index], [matrixRelation[index]], linefmt="C1-", markerfmt="C1o")
 
         plt.show()
 
@@ -115,7 +118,5 @@ class CPA():
         fig, axs = plt.subplots(1, 1)
         axs.plot(matrixRelation)
         axs.grid()
-
-
 
         plt.show()

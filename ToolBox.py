@@ -41,3 +41,7 @@ class ToolBox():
             return 6 - count
         else:
             return count
+
+    def HammingDistance(self, num1, num2):
+
+        return self.HammingWeight(num1^num2)
