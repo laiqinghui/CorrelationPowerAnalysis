@@ -129,7 +129,7 @@ def processCSV(filename, startpt, endpt):
     startpt -= 1
     endpt -= 1
 
-    dframe = pd.read_csv(filename)
+    dframe = pd.read_csv(filename, header=None)
     dframe = dframe.dropna(axis=1, how='any')  # Cleanup data: Removes anything that's not a number
     # dframe.drop(dframe.columns[[i for i in range(endpt, dframe.shape[1], 1)]], axis=1, inplace=True)
     # dframe.drop(dframe.columns[[i for i in range(0, startpt + 1, 1)]], axis=1, inplace= True)
