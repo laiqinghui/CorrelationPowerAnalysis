@@ -7,7 +7,8 @@ from CPA import CPA
 
 def main(argv):
 
-    inputfilename, startpt, endpt = getInputs(argv)
+    # inputfilename, startpt, endpt = getInputsArgv(argv)
+    inputfilename, startpt, endpt = getInputs()
     print("Processing ", inputfilename, "...")
     pt, ct, tracesPoints = processCSV(inputfilename, startpt, endpt)
     VisualizeTracesDifferences(pt, ct, tracesPoints)
@@ -95,10 +96,28 @@ def VisualizeTracesDifferences(pt, ct, tracesPoints):
 
     plt.show()
 
+def getInputs():
+
+    defaultCSV = "waveform374samples_327_2047.csv"
+    defaultStart = 327
+    defaultEnd = 2047
+
+    print("Welcome to Power Analysis Tool!")
+    print("===============================")
+    print()
+    inputfilename = input("Please enter the name of the waveform file (Press <enter> to use default file): ") or defaultCSV
+    print("File chosen: ", inputfilename)
+    startpt = int(input("Please enter the start index (Press <enter> to use default start index): ") or defaultStart)
+    print("Start index: ", startpt)
+    endpt = int(input("Please enter the end index (Press <enter> to use default end index): ") or defaultEnd)
+    print("End index: ", endpt)
+    print()
+
+    return inputfilename, startpt, endpt
 
 
 
-def getInputs(argv):
+def getInputsArgv(argv):
     if len(argv) < 3 and not ("-h" in argv):
         print("Wrong command format!")
         print("Please supply csv file and options. Use -h option for example command.")
