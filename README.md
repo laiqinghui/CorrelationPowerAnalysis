@@ -50,7 +50,7 @@ Dependencies for this project:
 2) Clone this repository
 3) Execute the python script by opening cmd in Windows or terminal in Linux and keying in:
 
-cd 'root directory of the repo'
+    cd 'root directory of the repo'
 
-python Main.py
+    python Main.py
 
