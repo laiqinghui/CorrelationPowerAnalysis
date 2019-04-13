@@ -26,6 +26,6 @@ Implementation of a side-channel attack using Correlation Power Analysis with Py
 
 Two plots will be produced as well. The details of the results and plots will be discussed in the accompanying report.
 
-<img src="https://raw.githubusercontent.com/laiqinghui/CorrelationPowerAnalysis/master/media/plot1.png" alt="alt text" width="100%" height="400">
+<img src="https://raw.githubusercontent.com/laiqinghui/CorrelationPowerAnalysis/master/media/plot1.png" alt="alt text" width="100%" height="500">
 
-<img src="https://raw.githubusercontent.com/laiqinghui/CorrelationPowerAnalysis/master/media/plot2.png" alt="alt text" width="100%" height="400">
+<img src="https://raw.githubusercontent.com/laiqinghui/CorrelationPowerAnalysis/master/media/plot2.png" alt="alt text" width="100%" height="500">
