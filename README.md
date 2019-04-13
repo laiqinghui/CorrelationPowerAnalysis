@@ -49,6 +49,8 @@ Dependencies for this project:
 1) Install Anaconda 3.7 or install Python 3.7.1 along with the necessary packages required as stated above.
 2) Clone this repository
 3) Execute the python script by opening cmd in Windows or terminal in Linux and keying in:
-   cd <root directory of the repo>
-   Python Main.py
+
+cd 'root directory of the repo'
+
+python Main.py
 
