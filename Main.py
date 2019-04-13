@@ -6,7 +6,6 @@ from CPA import CPA
 
 
 def main(argv):
-
     # inputfilename, startpt, endpt = getInputsArgv(argv)
     inputfilename, startpt, endpt, numTraces = getInputs()
     print("Processing ", inputfilename, "...")
@@ -18,20 +17,23 @@ def main(argv):
         VisualizeTracesDifferences(pt, ct, tracesPoints[:numTraces])
 
 
-def VisualizeCorrSingle(matrixRelation):
+def VisualizeCorrSingle(matrixRelations, byteNo):
 
+    matrixRelation = matrixRelations[byteNo]
     fig, axs = plt.subplots(1, 1)
     axs.stem(matrixRelation)
     axs.grid()
     # axs.stem(index, matrixRelation[index])
-    axs.stem([abs(matrixRelation).argmax()], [matrixRelation[abs(matrixRelation).argmax()]], linefmt="C1-", markerfmt="C1o")
+    axs.stem([abs(matrixRelation).argmax()], [matrixRelation[abs(matrixRelation).argmax()]], linefmt="C1-",
+             markerfmt="C1o")
 
-    axs.set_xlabel('All possible sub-key guesses (Byte 0)')
+    axs.set_xlabel('All possible sub-key guesses')
     axs.set_ylabel('Correlation Value')
+    plt.title("Correlation plot for byte "+ str(byteNo))
     plt.show()
 
-def VisualizeCorrAll(traceSets, matrixRelationMatList, keysize):
 
+def VisualizeCorrAll(traceSets, matrixRelationMatList, keysize):
     # Will be size of 16
     ylistContainer = []
 
@@ -52,7 +54,8 @@ def VisualizeCorrAll(traceSets, matrixRelationMatList, keysize):
     figures[figIndex].subplots_adjust(hspace=0.7, wspace=0.7)
 
     for index, ylist in enumerate(ylistContainer):
-        if index > numOfPlotsPerFig:
+
+        if plotIndex > numOfPlotsPerFig:
             figIndex += 1
             figures[figIndex] = plt.figure()
             figures[figIndex].subplots_adjust(hspace=0.7, wspace=0.7)
@@ -68,12 +71,10 @@ def VisualizeCorrAll(traceSets, matrixRelationMatList, keysize):
     plt.show()
 
 
-
 def VisualizeTracesDifferences(pt, ct, tracesPoints):
-
     keysize = 16
     # print("Range count", (math.floor(len(tracesPoints)/10)*10)+10)
-    traceSets = range(10, (math.floor(len(tracesPoints)/10)*10)+10, 10)
+    traceSets = range(10, (math.floor(len(tracesPoints) / 10) * 10) + 10, 10)
     cpaObjs = []
     # Will contain temp 16 sets of 20 (256 by 1) matrices for concat
     matrixRelationMatList = np.empty(shape=(keysize, len(traceSets)), dtype=object)
@@ -88,7 +89,7 @@ def VisualizeTracesDifferences(pt, ct, tracesPoints):
         # Do CPA
         print("Doing Correlational Power Analysis...")
         key = cpa.Analyse()
-        print("Key recovered with ", tracesPointsLen, " traces is ", [hex(k)+"|"+chr(k) for k in key])
+        print("Key recovered with ", tracesPointsLen, " traces is ", [hex(k) + "|" + chr(k) for k in key])
         # Size of 16
         currentMatrixRelations = cpa.GetMatrixRelations()
         # Populate matrix data for plotting later
@@ -101,13 +102,13 @@ def VisualizeTracesDifferences(pt, ct, tracesPoints):
     # print("matrixRelationMatList.shape", matrixRelationMatList.shape)
 
     print("Plotting single sub-key byte correlation plot...")
-    VisualizeCorrSingle(cpaObjs[index1].GetMatrixRelations()[0])
+    VisualizeCorrSingle(cpaObjs[index1].GetMatrixRelations(), 0)
+    VisualizeCorrSingle(cpaObjs[index1].GetMatrixRelations(), 1)
     print("Plotting all key bytes correlation plot...")
     VisualizeCorrAll(traceSets, matrixRelationMatList, keysize)
 
 
 def getInputs():
-
     defaultCSV = "waveform374samples_327_2047.csv"
     defaultStart = 327
     defaultEnd = 2047
@@ -116,18 +117,19 @@ def getInputs():
     print("Welcome to Power Analysis Tool!")
     print("===============================")
     print()
-    inputfilename = input("Please enter the name of the waveform file (Press <enter> to use default file): ") or defaultCSV
+    inputfilename = input(
+        "Please enter the name of the waveform file (Press <enter> to use default file): ") or defaultCSV
     print("File chosen: ", inputfilename)
     startpt = int(input("Please enter the start index (Press <enter> to use default start index): ") or defaultStart)
     print("Start index: ", startpt)
     endpt = int(input("Please enter the end index (Press <enter> to use default end index): ") or defaultEnd)
     print("End index: ", endpt)
-    numTraces = int(input("Please enter the max no. of traces to be use for analysis.\nNo. of trace will start from 10 and end at this amount in steps of 10 (Press <enter> to use all traces available in the file): ") or defaultNumTraces)
+    numTraces = int(input(
+        "Please enter the max no. of traces to be use for analysis.\nNo. of trace will start from 10 and end at this amount in steps of 10 (Press <enter> to use all traces available in the file): ") or defaultNumTraces)
     print("No. of traces to use: ", numTraces if numTraces != -1 else 'All')
     print()
 
     return inputfilename, startpt, endpt, numTraces
-
 
 
 def getInputsArgv(argv):
