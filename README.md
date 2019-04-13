@@ -1,7 +1,12 @@
 # CorrelationPowerAnalysis
 Implementation of a side-channel attack using Correlation Power Analysis with Python 
 
-- How to execute the the program:
+## Execute the program as a standalone executable:
+
+The python program is build into a standalone executable which is built and tested on the Microsoft Windows 10 platform. There is no requirement to install any other packages in order to run the executable.
+
+### How to use the executable:
+
 1. Ensure that the demo waveform file (waveform374samples_327_2047.csv) and the executable file (Main.exe) are in the same directory.
 
 2. Double click the "Main.exe" executable.
@@ -29,3 +34,21 @@ Two plots will be produced as well. The details of the results and plots will be
 <img src="https://raw.githubusercontent.com/laiqinghui/CorrelationPowerAnalysis/master/media/plot1.png" alt="alt text" width="100%" height="500">
 
 <img src="https://raw.githubusercontent.com/laiqinghui/CorrelationPowerAnalysis/master/media/plot2.png" alt="alt text" width="100%" height="500">
+
+## Execute the program from source:
+
+The project is built with Python 3.7.1 with Anaconda as the package manager.
+
+Dependencies for this project:
+1) Numpy
+2) Pandas
+2) Matplotlib
+
+### Steps to execute the program from source:
+
+1) Install Anaconda 3.7 or install Python 3.7.1 along with the necessary packages required as stated above.
+2) Clone this repository
+3) Execute the python script by opening cmd in Windows or terminal in Linux and keying in:
+   cd <root directory of the repo>
+   Python Main.py
+
