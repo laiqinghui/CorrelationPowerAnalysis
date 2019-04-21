@@ -19,9 +19,9 @@ The python program is build into a standalone executable which is built and test
     
 5. The program will now ask for the name of the CSV file that contain the traces. Users may choose to analysis their own set of traces by placing the their own trace file in the same directory as the executable file and provide the name of their own waveform files. However, for this demo, please press enter to proceed with the demo waveform file as that file contains the traces collected during the lab experiment.
 
-6. The program will now ask for the start index of the trace file which data should be use for processing. Users may also indicate the start of the index of their own waveform files. However, for this demo, please press enter to proceed with the setting for the default waveform file.
+6. The program will now ask for the start index of the trace file which data will start to be used for processing. Users may also indicate the start of the index of their own waveform files. However, for this demo, please press enter to proceed with the setting for the default waveform file.
 
-7. The program will now ask for the start index of the trace file which data should be use for processing. Users may also indicate the end of the index of their own waveform files. However, for this demo, please press enter to proceed with the setting for the default waveform file.
+7. The program will now ask for the end index of the trace file which data are stop to be considered for processing. Users may also indicate the end of the index of their own waveform files. However, for this demo, please press enter to proceed with the setting for the default waveform file.
 
 8. The program will now ask for the maximum number of traces that will be use for processing (Processing will start from 10 to this specified amount in steps of 10). Users may also indicate the maximum number of traces to be used for analysis in their own waveform files. However, for this demo, please press enter to use all traces available in the trace file.
 
