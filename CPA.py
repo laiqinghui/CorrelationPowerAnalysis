@@ -4,6 +4,7 @@ from ToolBox import ToolBox
 
 
 class CPA():
+
     toolbox = ToolBox()
 
     def __init__(self, keySize=16):
@@ -16,7 +17,6 @@ class CPA():
         self.matrixRelation = None
         self.matrixRelations = []
 
-        # self.CorrBytes = np.zeros(shape=(keySize, noOfTracesSet, 256))
 
     def SetTracesPointsAndPT(self, tracesPoints, plainTexts):
 
@@ -40,7 +40,7 @@ class CPA():
             matrixRelation = np.zeros(256)
             # Get max correlation value from among the traces data points
             for j in range(256):
-                # matrixRelation[j] = max(abs(corrMatrix[j]))
+
                 # Get max value in abs form but preserve the sign
                 matrixRelation[j] = corrMatrix[j][abs(corrMatrix[j]).argmax()]
 
@@ -51,7 +51,6 @@ class CPA():
             self.matrixRelation = matrixRelation
             self.matrixRelations.append(matrixRelation)
 
-            # self.key += format(index, '02X')
             self.key.append(index)
 
         return self.key

@@ -6,6 +6,7 @@ from CPA import CPA
 
 
 def main(argv):
+
     # inputfilename, startpt, endpt = getInputsArgv(argv)
     inputfilename, startpt, endpt, numTraces = getInputs()
     print("Processing ", inputfilename, "...")
@@ -23,7 +24,6 @@ def VisualizeCorrSingle(matrixRelations, byteNo):
     fig, axs = plt.subplots(1, 1)
     axs.stem(matrixRelation)
     axs.grid()
-    # axs.stem(index, matrixRelation[index])
     axs.stem([abs(matrixRelation).argmax()], [matrixRelation[abs(matrixRelation).argmax()]], linefmt="C1-",
              markerfmt="C1o")
 
@@ -34,6 +34,7 @@ def VisualizeCorrSingle(matrixRelations, byteNo):
 
 
 def VisualizeCorrAll(traceSets, matrixRelationMatList, keysize):
+
     # Will be size of 16
     ylistContainer = []
 
@@ -72,6 +73,7 @@ def VisualizeCorrAll(traceSets, matrixRelationMatList, keysize):
 
 
 def VisualizeTracesDifferences(pt, ct, tracesPoints):
+
     keysize = 16
     # print("Range count", (math.floor(len(tracesPoints)/10)*10)+10)
     traceSets = range(10, (math.floor(len(tracesPoints) / 10) * 10) + 10, 10)
@@ -98,8 +100,6 @@ def VisualizeTracesDifferences(pt, ct, tracesPoints):
             matrixRelationMatList[index2][index1] = (np.array(eachByteRelation).reshape(len(eachByteRelation), 1))
 
         cpaObjs.append(cpa)
-
-    # print("matrixRelationMatList.shape", matrixRelationMatList.shape)
 
     print("Plotting single sub-key byte correlation plot...")
     VisualizeCorrSingle(cpaObjs[index1].GetMatrixRelations(), 0)
@@ -165,8 +165,6 @@ def processCSV(filename, startpt, endpt):
 
     dframe = pd.read_csv(filename, header=None)
     dframe = dframe.dropna(axis=1, how='any')  # Cleanup data: Removes anything that's not a number
-    # dframe.drop(dframe.columns[[i for i in range(endpt, dframe.shape[1], 1)]], axis=1, inplace=True)
-    # dframe.drop(dframe.columns[[i for i in range(0, startpt + 1, 1)]], axis=1, inplace= True)
     pt = dframe.iloc[:, 0:1]
     ct = dframe.iloc[:, 1:2]
     dataTraces = dframe.iloc[:, startpt + 1:endpt]
